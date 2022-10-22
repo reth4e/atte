@@ -18,7 +18,8 @@ class CreateAttendancesTable extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('date');
             $table->time('started_at');
-            $table->time('finished_at');
+            $table->time('finished_at')->nullable();
+            //↑ここnullableにしないとエラー
             $table->timestamp("created_at")->useCurrent()->nullable();
             $table->timestamp("updated_at")->useCurrent()->nullable();
         });
