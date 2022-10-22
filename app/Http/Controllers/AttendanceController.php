@@ -11,25 +11,28 @@ class AttendanceController extends Controller
 {
     public function index()
     {
-        
-        return view('index', $param);
+        $user = Auth::user();
+        $param = ['user' => $user,];
+        return view('index',$param);
     }
-
+//indexはボタン状態の保持に使う
     public function start()
     {
-        
-        return view('index', $param);
+        $user = Auth::user();
+        $param = ['user' => $user,];
+        return view('index',$param);
     }
 
     public function end()
     {
-        
-        return view('index', $param);
+        $user = Auth::user();
+        $param = ['user' => $user,];
+        return view('index',$param);
     }
-
+//↑３つ今週やる
     public function attendances()
     {
         
-        return view('attendances', $param);
+        return view('attendances');
     }
 }
