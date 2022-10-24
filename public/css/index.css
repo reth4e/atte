@@ -1,0 +1,103 @@
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  color: #000;
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.header-title {
+  font-size: 28px;
+  margin-left: 50px;
+}
+
+.header-link-list {
+  display: flex;
+}
+
+.header-link {
+  margin-right: 40px;
+}
+
+.header-link a{
+  margin-top: 5px;
+  display: inline-block;
+}
+/* 高さ調整は↑でいいのか？ */
+
+.btn-logout {
+  border: none;
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+
+
+main {
+  width: 100%;
+  background-color: #eee;
+}
+
+.wrapper {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.greeting {
+  text-align: center;
+  padding: 40px 0;
+  font-weight: bold;
+}
+
+.buttons {
+  padding-bottom: 100px;
+}
+
+.work-button,.rest-button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.work-button {
+  margin-bottom: 40px;
+}
+
+.work-button form,
+.rest-button form {
+  width: 47%;
+}
+
+.btn {
+  width: 100%;
+  display: block;
+  padding: 60px 0;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #fff;
+  border-radius: 5px;
+  border: none;
+}
+
+
+.footer {
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-logo {
+  font-size: 12px;
+  font-weight: bold;
+}

@@ -17,6 +17,7 @@ class RestController extends Controller
         $date = new DateTime();
         $rest = new Rest();
         $attendance = Attendance::where('user_id', $user->id)->latest()->first();
+        //finished_atの条件をつける
         $rest->attendance_id = $attendance->id; //error発生  ()のせい？
         //error attendance->id=null
         $rest->started_at = date_format($date , 'H:i:s');
@@ -29,6 +30,7 @@ class RestController extends Controller
     {
         $user = Auth::user();
         $attendance = Attendance::where('user_id', $user->id)->latest()->first();
+        //finished_atの条件をつける
         $date = new DateTime();
         $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
         //error undefined variable $attendance

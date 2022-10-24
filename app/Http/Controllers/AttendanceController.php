@@ -24,11 +24,16 @@ class AttendanceController extends Controller
         $date = new DateTime();
         $attendance = new Attendance;
         //user_idは自動で代入？
-        $attendance->user_id = $user->id;
-        $attendance->date = date_format($date , 'Y-m-d');
-        $attendance->started_at = date_format($date , 'H:i:s');
-        //token削除は必要？
-        $attendance->save();
+        // $attendance->user_id = $user->id;
+        // $attendance->date = date_format($date , 'Y-m-d');
+        // $attendance->started_at = date_format($date , 'H:i:s');
+        // //token削除は必要？
+        // $attendance->save();
+        $attendance->create([
+            'user_id' => $user->id,
+            'date' => date_format($date , 'Y-m-d'),
+            'started_at' => date_format($date , 'H:i:s')
+        ]);
         $param = ['user' => $user,];
         return view('index',$param);
     }
@@ -36,6 +41,7 @@ class AttendanceController extends Controller
     public function end()
     {
         $user = Auth::user();
+        //毎回Auth::user()入れる？
         $date = new DateTime();
         $attendance = Attendance::where('user_id', $user->id)->latest()->first();
         // $attendance->finished_at = date_format($date , 'H:i:s');
