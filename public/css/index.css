@@ -73,8 +73,10 @@ main {
   margin-bottom: 40px;
 }
 
-.work-button form,
-.rest-button form {
+.work-start,
+.work-end,
+.rest-start,
+.rest-end {
   width: 47%;
 }
 

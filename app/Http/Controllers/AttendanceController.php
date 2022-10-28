@@ -14,10 +14,31 @@ class AttendanceController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $param = ['user' => $user,];
+        $attendance = Attendance::where('user_id', $user->id)->latest()->first();
+        $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
+        if($attendance->started_at && $attendance->finished_at){
+            $work_start = TRUE;
+            $rest_start = FALSE;
+            $rest_end = FALSE;
+        }elseif($attendance->started_at && !$attendance->finished_at){
+            $work_start = FALSE;
+            if($rest->started_at && $rest->finished_at){
+                $rest_start = TRUE;
+                $rest_end = FALSE;
+            }elseif($rest->started_at && !$rest->finished_at){
+                $rest_start = FALSE;
+                $rest_end = TRUE;
+            }
+        }
+
+        $param = ['user' => $user,
+            'work_start' => $work_start,
+            'rest_start' => $rest_start,
+            'rest_end' => $rest_end
+        ];
         return view('index',$param);
     }
-//indexはボタン状態の保持に使う
+//indexはボタン状態の保持に使う ↑を主に今週やる10/24
     public function start()
     {
         $user = Auth::user();
@@ -54,7 +75,7 @@ class AttendanceController extends Controller
         $param = ['user' => $user,];
         return view('index',$param);
     }
-//↑３つ今週やる
+//↑３つ今週やる 10/16
     public function attendances()
     {
         

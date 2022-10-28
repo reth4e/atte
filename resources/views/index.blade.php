@@ -35,24 +35,22 @@
       <h3 class="greeting">{{$user->name}}さんお疲れ様です !</h3>
       <div class="buttons">
         <div class="work-button">
-          <form action="/attendance/start" method="get">
-            
-            <button class="work-start btn" id="work-start">勤務開始</button>
+          <!-- ここに@ifで分岐、押せないボタンを作る -->
+          <form action="/attendance/start" method="get" class="work-start">
+            <button class="btn" id="work-start">勤務開始</button>
           </form>
-          <form action="/attendance/end" method="get">
-            
-            <button class="work-end btn" id="work-end">勤務終了</button>
+          <form action="/attendance/end" method="get" class="work-end">
+            <button class="btn" id="work-end">勤務終了</button>
           </form>
         </div>
         <div class="rest-button">
-          <form action="/rest/start" method="get">
-            
-            <button class="rest-start btn" id="rest-start">休憩開始</button>
+          <form action="/rest/start" method="get" class="rest-start">
+            <button class="btn" id="rest-start">休憩開始</button>
           </form>
-          <form action="/rest/end" method="get">
-            
-            <button class="rest-end btn" id="rest-end">休憩終了</button>
+          <form action="/rest/end" method="get" class="rest-end">
+            <button class="btn" id="rest-end">休憩終了</button>
           </form>
+          <!-- ↑のボタンの場合分けをやる 10/24 -->
         </div>
       </div>
     </div>
