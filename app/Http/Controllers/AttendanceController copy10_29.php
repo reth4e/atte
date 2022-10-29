@@ -15,37 +15,30 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         $attendance = Attendance::where('user_id', $user->id)->latest()->first();
-        if($attendance){
-            $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
-        
-            if(!$attendance->started_at && !$attendance->finished_at){
-                $work_start = TRUE;
-                $rest_start = FALSE;
-                $rest_end = FALSE;
-            }elseif($attendance->started_at && !$attendance->finished_at){
-                $work_start = FALSE;
-                //error attempt to read property on NULL
-                if(!$rest->started_at && !$rest->finished_at){
-                    $rest_start = TRUE;
-                    $rest_end = FALSE;
-                }elseif($rest->started_at && !$rest->finished_at){
-                    $rest_start = FALSE;
-                    $rest_end = TRUE;
-                }elseif($rest->started_at && $rest->finished_at){
-                    $rest_start = TRUE;
-                    $rest_end = FALSE;
-                }
-            }elseif($attendance->started_at && $attendance->finished_at){
-                $work_start = TRUE;
-                $rest_start = FALSE;
-                $rest_end = FALSE;
-            }
-        }
-        else{
+        $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
+        if($attendance->started_at && $attendance->finished_at){
+            $work_start = TRUE;
+            // $rest_start = FALSE;
+            // $rest_end = FALSE;
+        }elseif($attendance->started_at && !$attendance->finished_at){
+            $work_start = FALSE;
+            //error attempt to read property on NULL
+            // if($rest->started_at && $rest->finished_at){
+            //     $rest_start = TRUE;
+            //     $rest_end = FALSE;
+            // }elseif($rest->started_at && !$rest->finished_at){
+            //     $rest_start = FALSE;
+            //     $rest_end = TRUE;
+            // }elseif(!$rest->started_at && !$rest->finished_at){
+            //     $rest_start = TRUE;
+            //     $rest_end = FALSE;
+            // }
+        }elseif(!$attendance->started_at && !$attendance->finished_at){
             $work_start = TRUE;
             $rest_start = FALSE;
             $rest_end = FALSE;
         }
+
         $param = ['user' => $user,
             'work_start' => $work_start,
             //undefined rest_st,end

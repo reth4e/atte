@@ -40,6 +40,7 @@ a {
   background-color: #fff;
   font-size: 14px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 
@@ -80,6 +81,20 @@ main {
   width: 47%;
 }
 
+.no_push {
+  padding: 60px 0;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #fff;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+}
+
+.no_push p{
+  opacity: 0.3;
+}
+
 .btn {
   width: 100%;
   display: block;
@@ -89,6 +104,7 @@ main {
   background-color: #fff;
   border-radius: 5px;
   border: none;
+  cursor: pointer;
 }
 
 

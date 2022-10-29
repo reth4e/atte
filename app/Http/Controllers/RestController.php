@@ -22,7 +22,14 @@ class RestController extends Controller
         //error attendance->id=null
         $rest->started_at = date_format($date , 'H:i:s');
         $rest->save();
-        $param = ['user' => $user,];
+        $work_start = FALSE;
+        $rest_start = FALSE;
+        $rest_end = TRUE;
+        $param = ['user' => $user, 
+            'work_start' => $work_start,
+            'rest_start' => $rest_start,
+            'rest_end' => $rest_end
+        ];
         return view('index',$param);
     }
 
@@ -37,8 +44,15 @@ class RestController extends Controller
         $rest->update([
             'finished_at' => date_format($date , 'H:i:s')
         ]);
-        $param = ['user' => $user,];
+        $work_start = FALSE;
+        $rest_start = TRUE;
+        $rest_end = FALSE;
+        $param = ['user' => $user, 
+            'work_start' => $work_start,
+            'rest_start' => $rest_start,
+            'rest_end' => $rest_end
+        ];
         return view('index',$param);
     }
-    //↑2つ今週
+    //↑2つ今週 10/15
 }
