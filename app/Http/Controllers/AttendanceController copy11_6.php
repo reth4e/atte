@@ -14,45 +14,40 @@ class AttendanceController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $dt = new DateTime();
-        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //$attendanceの取得に失敗、$dt->formatにし忘れ
-        $work_start = FALSE;
-        $work_end = FALSE;
-        if($attendance){//すでに本日勤務開始している
+        $attendance = Attendance::where('user_id', $user->id)->latest()->first();
+        if($attendance){
             $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
-            
         //started_atはヌルにならないので条件変更
-            if(!$attendance->finished_at){//勤務中
-                $work_end = TRUE;
+            if(!$attendance->started_at && !$attendance->finished_at){
+                $work_start = TRUE;
+                $rest_start = FALSE;
+                $rest_end = FALSE;
+            }elseif($attendance->started_at && !$attendance->finished_at){
+                $work_start = FALSE;
                 //error attempt to read property on NULL
-                
-                if($rest){//すでに休憩ボタンを押した
-                    if(!$rest->finished_at){//休憩中
-                        $work_end = FALSE;
-                        $rest_start = FALSE;
-                        $rest_end = TRUE;
-                    }else{//休憩外
-                        $rest_start = TRUE;
-                        $rest_end = FALSE;
-                    }
-                }else{//まだその勤務内に休憩をしていない場合
+                if(!$rest->started_at && !$rest->finished_at){
+                    $rest_start = TRUE;
+                    $rest_end = FALSE;
+                }elseif($rest->started_at && !$rest->finished_at){
+                    $rest_start = FALSE;
+                    $rest_end = TRUE;
+                }elseif($rest->started_at && $rest->finished_at){
                     $rest_start = TRUE;
                     $rest_end = FALSE;
                 }
-                
-            }elseif($attendance->finished_at){//勤務時間外
+            }elseif($attendance->started_at && $attendance->finished_at){
                 $work_start = TRUE;
                 $rest_start = FALSE;
                 $rest_end = FALSE;
             }
-        }else{//新規登録者、勤務中のまま終了せず日付変更時の処理、本日の勤務開始前
+        }
+        else{
             $work_start = TRUE;
             $rest_start = FALSE;
             $rest_end = FALSE;
         }
         $param = ['user' => $user,
             'work_start' => $work_start,
-            'work_end' => $work_end,
             //undefined rest_st,end
             'rest_start' => $rest_start,
             'rest_end' => $rest_end,
@@ -77,12 +72,10 @@ class AttendanceController extends Controller
             'started_at' => date_format($date , 'H:i:s')
         ]);
         $work_start = FALSE;
-        $work_end = TRUE;
         $rest_start = TRUE;
         $rest_end = FALSE;
         $param = ['user' => $user, 
             'work_start' => $work_start,
-            'work_end' => $work_end,
             'rest_start' => $rest_start,
             'rest_end' => $rest_end,
         ];
@@ -95,11 +88,8 @@ class AttendanceController extends Controller
         $user = Auth::user();
         //毎回Auth::user()入れる？
         $date = new DateTime();
-        $dt = new DateTime();
-        $dt->format('Y-m-d');
-        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //$attendanceが取得できなかった場合の分岐を考えるべき？
+        $attendance = Attendance::where('user_id', $user->id)->latest()->first();
         $work_start = TRUE;
-        $work_end = FALSE;
         $rest_start = FALSE;
         $rest_end = FALSE;
         // $attendance->finished_at = date_format($date , 'H:i:s');
@@ -111,7 +101,6 @@ class AttendanceController extends Controller
         //model Attendance.phpのfillableにfinished_atを入れなければならない
         $param = ['user' => $user, 
             'work_start' => $work_start,
-            'work_end' => $work_end,
             'rest_start' => $rest_start,
             'rest_end' => $rest_end,
         ];

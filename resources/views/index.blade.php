@@ -46,7 +46,7 @@
             </div>
           @endif
 
-          @if(!$work_start)
+          @if($work_end)
             <form action="/attendance/end" method="get" class="work-end">
               <button class="btn" id="work-end">勤務終了</button>
             </form>
@@ -56,6 +56,7 @@
             </div>
           @endif
         </div>
+        
         <div class="rest-button">
             @if($rest_start)
             <form action="/rest/start" method="get" class="rest-start">
