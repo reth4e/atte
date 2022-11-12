@@ -98,6 +98,7 @@ class AttendanceController extends Controller
         $dt = new DateTime();
         $dt->format('Y-m-d');
         $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //$attendanceが取得できなかった場合の分岐を考えるべき？
+        //$attendanceない場合の分岐を書く
         $work_start = TRUE;
         $work_end = FALSE;
         $rest_start = FALSE;

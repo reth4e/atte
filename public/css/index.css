@@ -19,6 +19,7 @@ a {
 .header-title {
   font-size: 28px;
   margin-left: 50px;
+  font-weight: bold;
 }
 
 .header-link-list {

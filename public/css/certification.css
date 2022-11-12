@@ -1,0 +1,105 @@
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  color: blue;
+}
+
+/* header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.header-title {
+  font-size: 28px;
+  margin-left: 50px;
+  font-weight: bold;
+}
+
+.header-link-list {
+  display: flex;
+}
+
+.header-link {
+  margin-right: 40px;
+}
+
+.header-link a {
+  margin-top: 5px;
+  display: inline-block;
+}
+
+/* main */
+main {
+  width: 100%;
+  background-color: #eee;
+}
+
+.container {
+  width: 30%;
+  margin: 0 auto;
+  padding-top: 60px;
+}
+
+.container-login {
+  padding-bottom: 160px;
+}
+
+.container-register {
+  padding-bottom: 55px;
+}
+
+.ttl {
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.border {
+  border: 2px solid #888;
+  background-color: #eee;
+}
+
+.form-body {
+  margin: 30px 0 30px 0;
+}
+
+.mt-30 {
+  margin-top: 30px;
+}
+
+.btn {
+  background-color: blue;
+  color: #fff;
+  display: block;
+  width: 100%;
+  padding: 15px 0;
+  border-radius: 5px;
+}
+
+.navigation {
+  text-align: center;
+}
+
+.navigation p {
+  margin-bottom: 5px;
+}
+
+/* footer */
+.footer {
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-logo {
+  font-size: 12px;
+  font-weight: bold;
+}
