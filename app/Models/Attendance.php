@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Rest;
+use Carbon\Carbon;
 
 class Attendance extends Model
 {
@@ -19,4 +21,6 @@ class Attendance extends Model
     public function rests(){
 		return $this->hasMany('App\Models\Rest');
     }
+
+    
 }

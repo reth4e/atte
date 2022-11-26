@@ -1,0 +1,90 @@
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  color: #000;
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.header-title {
+  font-size: 28px;
+  margin-left: 50px;
+  font-weight: bold;
+}
+
+.header-link-list {
+  display: flex;
+}
+
+.header-link {
+  margin-right: 40px;
+}
+
+.header-link a {
+  margin-top: 5px;
+  display: inline-block;
+}
+
+.btn-logout {
+  border: none;
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+main {
+  width: 100%;
+  padding-bottom: 50px;
+  background-color: #eee;
+}
+
+.wrapper {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.date {
+  text-align: center;
+  padding: 40px 0;
+  font-size: 16px;
+}
+
+.attendance_table {
+  width: 100%;
+}
+
+tr {
+  border-top: 1px solid black;
+}
+
+th,td {
+  text-align: center;
+  width: 20%;
+  padding: 15px 0;
+  font-size: 14px;
+}
+
+
+.footer {
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-logo {
+  font-size: 12px;
+  font-weight: bold;
+}

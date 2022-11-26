@@ -58,7 +58,7 @@
         </div>
         
         <div class="rest-button">
-            @if($rest_start)
+          @if($rest_start)
             <form action="/rest/start" method="get" class="rest-start">
               <button class="btn" id="rest-start">休憩開始</button>
             </form>

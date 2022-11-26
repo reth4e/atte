@@ -7,6 +7,7 @@ use App\Models\Attendance;
 use App\Models\Rest;
 
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use DateTime;
 
 class AttendanceController extends Controller
@@ -14,7 +15,8 @@ class AttendanceController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $dt = new DateTime();
+        $dt = new Carbon();
+        // dd($dt->addDay(1));
         $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //$attendanceの取得に失敗、$dt->formatにし忘れ
         $work_start = FALSE;
         $work_end = FALSE;
@@ -63,7 +65,7 @@ class AttendanceController extends Controller
     public function start()
     {
         $user = Auth::user();
-        $date = new DateTime();
+        $date = new Carbon();
         $attendance = new Attendance;
         //user_idは自動で代入？
         // $attendance->user_id = $user->id;
@@ -94,15 +96,17 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
         //毎回Auth::user()入れる？
-        $date = new DateTime();
-        $dt = new DateTime();
-        $dt->format('Y-m-d');
+        $date = new Carbon();
+        $dt = new Carbon();
         $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //$attendanceが取得できなかった場合の分岐を考えるべき？
-        //$attendanceない場合の分岐を書く
+        
         $work_start = TRUE;
         $work_end = FALSE;
         $rest_start = FALSE;
         $rest_end = FALSE;
+        //$attendanceない場合の分岐を書く
+        
+        
         // $attendance->finished_at = date_format($date , 'H:i:s');
         // Attendance::where('user_id', $user->id)->latest()->first()->update($attendance);
         //↑のやり方ではarray関連のエラーが起きた
@@ -121,7 +125,83 @@ class AttendanceController extends Controller
 //↑３つ今週やる 10/16
     public function attendances()
     {
+        $dt = new Carbon();
+        $attendances = Attendance::where('date', $dt->format('Y-m-d'))->get();
         
-        return view('attendances');
+        foreach($attendances as $attendance){
+            $rest_total = 0;
+            $rests = Rest::where('attendance_id',$attendance->id)->get();
+            foreach($rests as $rest){
+                $rest_start = new Carbon($rest->started_at);
+                $rest_finish = new Carbon($rest->finished_at);
+                $rest_diff = $rest_start->diffInSeconds($rest_finish);
+                $rest_total = $rest_total + $rest_diff; //休憩時間の合計算出(int)
+            }
+            //ここでtotalを時間に変換が必要
+            $rest_hours = (int)($rest_total / 3600);
+            $rest_minutes = (int)($rest_total / 60);
+            $rest_seconds = (int)($rest_total % 60);
+            //ここでstrに変換？
+            //時、分、秒のそれぞれを場合分け、2桁ならそのまま変換、１桁なら０を前に着けて変換
+            if($rest_hours < 10) {
+                $rest_hours_s = '0'.(string)$rest_hours;
+            } else{
+                $rest_hours_s = (string)$rest_hours;
+            }
+
+            if($rest_minutes < 10) {
+                $rest_minutes_s = '0'.(string)$rest_minutes;
+            } else{
+                $rest_minutes_s = (string)$rest_minutes;
+            }
+
+            if($rest_seconds < 10) {
+                $rest_seconds_s = '0'.(string)$rest_seconds;
+            } else{
+                $rest_seconds_s = (string)$rest_seconds;
+            }
+
+            //strからtimeに
+            $attendance->rest_sum = date('H:i:s', strtotime($rest_hours_s.$rest_minutes_s.$rest_seconds_s));
+            //$attendance->rest_sum = $total;
+            
+            //ここで勤務時間を開始時間、終了時間、休憩時間から算出
+            $attendance_start = new Carbon($attendance->started_at);
+            $attendance_finish = new Carbon($attendance->finished_at);
+            $work_diff = $attendance_start->diffInSeconds($attendance_finish);
+            $work_total = $work_diff - $rest_total;
+
+            //work_totalの変換
+            $work_hours = (int)($work_total / 3600);
+            $work_minutes = (int)($work_total / 60);
+            $work_seconds = (int)($work_total % 60);
+
+            if($work_hours < 10) {
+                $work_hours_s = '0'.(string)$work_hours;
+            } else{
+                $work_hours_s = (string)$work_hours;
+            }
+
+            if($work_minutes < 10) {
+                $work_minutes_s = '0'.(string)$work_minutes;
+            } else{
+                $work_minutes_s = (string)$work_minutes;
+            }
+
+            if($work_seconds < 10) {
+                $work_seconds_s = '0'.(string)$work_seconds;
+            } else{
+                $work_seconds_s = (string)$work_seconds;
+            }
+
+            $attendance->work_sum = date('H:i:s', strtotime($work_hours_s.$work_minutes_s.$work_seconds_s));
+        }
+        //dd($attendances);
+        
+        $param = [
+            'attendances' => $attendances,
+            'dt' => $dt->format('Y-m-d'),
+        ];
+        return view('attendances',$param);
     }
 }

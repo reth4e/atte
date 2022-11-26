@@ -7,6 +7,7 @@ use App\Models\Attendance;
 use App\Models\Rest;
 
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use DateTime;
 
 class RestController extends Controller
@@ -14,9 +15,9 @@ class RestController extends Controller
     public function start()
     {
         $user = Auth::user();
-        $date = new DateTime();
+        $date = new Carbon();
         $rest = new Rest();
-        $dt = new DateTime();
+        $dt = new Carbon();
         $dt->format('Y-m-d');
         $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //分岐？
         //finished_atの条件をつける
@@ -40,11 +41,11 @@ class RestController extends Controller
     public function end()
     {
         $user = Auth::user();
-        $dt = new DateTime();
+        $dt = new Carbon();
         $dt->format('Y-m-d');
         $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //分岐？
         //finished_atの条件をつける
-        $date = new DateTime();
+        $date = new Carbon();
         $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
         //error undefined variable $attendance
         $rest->update([
