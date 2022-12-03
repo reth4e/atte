@@ -15,10 +15,10 @@
     </h2>
     <ul class="header-link-list">
       <li class="header-link">
-        <a href="/attendance">ホーム</a>
+        <a href="/">ホーム</a>
       </li>
       <li class="header-link">
-        <a href="/attendance/attendances">日付一覧</a>
+        <a href="/attendance/attendances/0">日付一覧</a>
       </li>
       <li class="header-link">
         <form action="/logout" method="post" class="form-logout">
@@ -31,7 +31,15 @@
 
   <main>
     <div class="wrapper">
-      <h3 class="date">{{$dt}}</h3>
+      <div class="flex">
+        <div>
+          <a href="{!! '/attendance/attendances/' . ($num - 1) !!}" class="date_link"><</a>
+        </div>
+        <h3 class="date">{{$dt}}</h3>
+        <div>
+          <a href="{!! '/attendance/attendances/' . ($num + 1) !!}" class="date_link">></a>
+        </div>
+      </div>
       <!-- ここでattendances->dateとするとエラー Property[date] does not exist on the Eloquent builder instance. -->
       <table class="attendance_table">
         <tr>
@@ -55,6 +63,7 @@
           </tr>
         @endforeach
       </table>
+      {{ $attendances->links('pagination::bootstrap-4') }}
     </div>
     
   </main>

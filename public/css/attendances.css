@@ -46,7 +46,6 @@ a {
 
 main {
   width: 100%;
-  padding-bottom: 50px;
   background-color: #eee;
 }
 
@@ -55,10 +54,26 @@ main {
   margin: 0 auto;
 }
 
-.date {
-  text-align: center;
+.flex, .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex {
   padding: 40px 0;
+}
+
+.date_link {
+  border: 1px solid blue;
+  background-color: #fff;
+  color: blue;
+  padding: 0 7px;
+}
+
+.date {
   font-size: 16px;
+  margin: 0 30px;
 }
 
 .attendance_table {
@@ -75,6 +90,43 @@ th,td {
   padding: 15px 0;
   font-size: 14px;
 }
+
+.pagination {
+  padding: 50px 0 70px 0;
+}
+
+.page-link {
+  color: rgb(47, 126, 228);
+  background-color: #fff;
+  padding: 10px;
+}
+
+.page-item:not(:last-of-type) {
+  margin-right: 2px;
+}
+
+.page-item:first-of-type .page-link {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.page-item:last-of-type .page-link{
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+/* svg.w-5.h-5, .duration-150, .px-4 {
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+  padding: 10px;
+  color: blue;
+} */
+
+/* svg.w-5.h-5:first-of-type {
+  border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+} */
 
 
 .footer {

@@ -123,10 +123,19 @@ class AttendanceController extends Controller
         return view('index',$param);
     }
 //↑３つ今週やる 10/16
-    public function attendances()
+    public function attendances(Request $request)
     {
+        $num = $request->num;
         $dt = new Carbon();
-        $attendances = Attendance::where('date', $dt->format('Y-m-d'))->get();
+        if ($num > 0){
+            $date = $dt->addDays($num);
+        } elseif ($num == 0){
+            $date = $dt;
+        } else {
+            $date = $dt->subDays(-$num);
+        }
+        // $dt = new Carbon();
+        $attendances = Attendance::where('date', $date->format('Y-m-d'))->paginate(5);
         
         foreach($attendances as $attendance){
             $rest_total = 0;
@@ -143,13 +152,13 @@ class AttendanceController extends Controller
             $rest_seconds = (int)($rest_total % 60);
             //ここでstrに変換？
             //時、分、秒のそれぞれを場合分け、2桁ならそのまま変換、１桁なら０を前に着けて変換
-            if($rest_hours < 10) {
+            if ($rest_hours < 10) {
                 $rest_hours_s = '0'.(string)$rest_hours;
-            } else{
+            } else {
                 $rest_hours_s = (string)$rest_hours;
             }
 
-            if($rest_minutes < 10) {
+            if ($rest_minutes < 10) {
                 $rest_minutes_s = '0'.(string)$rest_minutes;
             } else{
                 $rest_minutes_s = (string)$rest_minutes;
@@ -157,7 +166,7 @@ class AttendanceController extends Controller
 
             if($rest_seconds < 10) {
                 $rest_seconds_s = '0'.(string)$rest_seconds;
-            } else{
+            } else {
                 $rest_seconds_s = (string)$rest_seconds;
             }
 
@@ -200,7 +209,8 @@ class AttendanceController extends Controller
         
         $param = [
             'attendances' => $attendances,
-            'dt' => $dt->format('Y-m-d'),
+            'dt' => $date->format('Y-m-d'),
+            'num' => $num,
         ];
         return view('attendances',$param);
     }

@@ -14,11 +14,13 @@ use App\Http\Controllers\RestController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['middleware' => 'auth'],function() {
+    Route::get('/', [AttendanceController::class, 'index']);
+});
 
 Route::group(['prefix' => 'attendance'], function() {
     Route::group(['middleware' => 'auth'],function() {
-        Route::get('', [AttendanceController::class, 'index']);
-        Route::get('attendances', [AttendanceController::class,'attendances']);
+        Route::get('attendances/{num}', [AttendanceController::class,'attendances']);
     });
 });
 
