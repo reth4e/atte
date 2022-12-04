@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\RestController;
+use App\Http\Controllers\TestMailController;
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ Route::prefix('attendance')->group(function () {
     Route::get('end', [AttendanceController::class,'end']);
 });
 
-//下のミドルウェアauthをverifiedにすると認証画面　エラー　Connection could not be established with host mailhog
+//下のミドルウェアauthをverifiedにすると認証画面　エラー　Connection could not be established with host mailhog →mailtrapに変更
 Route::group(['middleware' => 'verified' ],function() {
     Route::get('/', [AttendanceController::class, 'index']);
     Route::get('attendance/{num}', [AttendanceController::class,'attendances']);
@@ -34,6 +35,9 @@ Route::prefix('rest')->group(function () {
     Route::get('start', [RestController::class, 'start']);
     Route::get('end', [RestController::class,'end']);
 });
+
+//メールの送信テスト mailtrap
+Route::get('/mail',[TestMailController::class,'send']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
