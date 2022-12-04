@@ -18,7 +18,7 @@
         <a href="/">ホーム</a>
       </li>
       <li class="header-link">
-        <a href="/attendance/attendances/0">日付一覧</a>
+        <a href="/attendance/0">日付一覧</a>
       </li>
       <li class="header-link">
         <form action="/logout" method="post" class="form-logout">
@@ -33,11 +33,11 @@
     <div class="wrapper">
       <div class="flex">
         <div>
-          <a href="{!! '/attendance/attendances/' . ($num - 1) !!}" class="date_link"><</a>
+          <a href="{!! '/attendance/' . ($num - 1) !!}" class="date_link"><</a>
         </div>
         <h3 class="date">{{$dt}}</h3>
         <div>
-          <a href="{!! '/attendance/attendances/' . ($num + 1) !!}" class="date_link">></a>
+          <a href="{!! '/attendance/' . ($num + 1) !!}" class="date_link">></a>
         </div>
       </div>
       <!-- ここでattendances->dateとするとエラー Property[date] does not exist on the Eloquent builder instance. -->

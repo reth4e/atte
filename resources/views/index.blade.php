@@ -19,7 +19,7 @@
         <a href="/">ホーム</a>
       </li>
       <li class="header-link">
-        <a href="/attendance/attendances/0">日付一覧</a>
+        <a href="/attendance/0">日付一覧</a>
       </li>
       <li class="header-link">
         <form action="/logout" method="post" class="form-logout">
