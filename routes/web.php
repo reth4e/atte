@@ -28,6 +28,7 @@ Route::prefix('attendance')->group(function () {
 Route::group(['middleware' => 'verified' ],function() {
     Route::get('/', [AttendanceController::class, 'index']);
     Route::get('attendance/{num}', [AttendanceController::class,'attendances']);
+    Route::get('users', [RestController::class, 'users']);
 });
 
 
@@ -35,6 +36,8 @@ Route::prefix('rest')->group(function () {
     Route::get('start', [RestController::class, 'start']);
     Route::get('end', [RestController::class,'end']);
 });
+
+ute::get('userPage/{id}', [RestController::class, 'userPage']);
 
 //メールの送信テスト mailtrap
 Route::get('/mail',[TestMailController::class,'send']);
@@ -44,20 +47,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 
-// Route::get('/email/verify', function () {
-//     return view('auth.verify-email');
-// })->middleware('auth')->name('verification.notice');
 
-// Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-//     $request->fulfill();
-
-//     return redirect('/home');
-// })->middleware(['auth', 'signed'])->name('verification.verify');
-
-// Route::post('/email/verification-notification', function (Request $request) {
-//     $request->user()->sendEmailVerificationNotification();
-
-//     return back()->with('message', 'Verification link sent!');
-// })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 require __DIR__.'/auth.php';

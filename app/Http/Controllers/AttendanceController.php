@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\Rest;
+use App\Models\User;
 
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -213,5 +214,20 @@ class AttendanceController extends Controller
             'num' => $num,
         ];
         return view('attendances',$param);
+    }
+
+    public function users()
+    {
+        $users = User::all();
+        $param = [
+            'users' => $users,
+        ];
+        return view('users',$param);
+    }
+
+    public function userPage(Request $request)
+    {
+        
+        return view('userpage',$param);
     }
 }
