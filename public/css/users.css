@@ -30,11 +30,10 @@ a {
   margin-right: 40px;
 }
 
-.header-link a{
+.header-link a {
   margin-top: 5px;
   display: inline-block;
 }
-/* 高さ調整は↑でいいのか？ */
 
 .btn-logout {
   border: none;
@@ -45,7 +44,6 @@ a {
 }
 
 
-/* heightの指定 vh? */
 main {
   width: 100%;
   background-color: #eee;
@@ -56,56 +54,53 @@ main {
   margin: 0 auto;
 }
 
-.greeting {
+.name, .title {
   text-align: center;
   padding: 40px 0;
   font-weight: bold;
 }
 
-.buttons {
-  padding-bottom: 100px;
-}
-
-.work-button,.rest-button {
-  display: flex;
-  justify-content: space-between;
-}
-
-.work-button {
-  margin-bottom: 40px;
-}
-
-.work-start,
-.work-end,
-.rest-start,
-.rest-end {
-  width: 47%;
-}
-
-.no_push {
-  padding: 60px 0;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: #fff;
-  border-radius: 5px;
-  border: none;
-  text-align: center;
-}
-
-.no_push p{
-  opacity: 0.3;
-}
-
-.btn {
+.users_table {
   width: 100%;
-  display: block;
-  padding: 60px 0;
-  font-size: 16px;
-  font-weight: bold;
+}
+
+th,
+td {
+  text-align: center;
+  width: 20%;
+  padding: 15px 0;
+  font-size: 14px;
+}
+
+tr {
+  border-top: 1px solid black;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0 70px 0;
+}
+
+.page-link {
+  color: rgb(47, 126, 228);
   background-color: #fff;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
+  padding: 10px;
+}
+
+.page-item:not(:last-of-type) {
+  margin-right: 2px;
+}
+
+.page-item:first-of-type .page-link {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.page-item:last-of-type .page-link {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 

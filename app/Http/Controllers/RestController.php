@@ -12,6 +12,7 @@ use DateTime;
 
 class RestController extends Controller
 {
+    //休憩開始
     public function start()
     {
         $user = Auth::user();
@@ -38,6 +39,7 @@ class RestController extends Controller
         return view('index',$param);
     }
 
+    //休憩終了
     public function end()
     {
         $user = Auth::user();

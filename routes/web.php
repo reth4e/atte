@@ -28,7 +28,7 @@ Route::prefix('attendance')->group(function () {
 Route::group(['middleware' => 'verified' ],function() {
     Route::get('/', [AttendanceController::class, 'index']);
     Route::get('attendance/{num}', [AttendanceController::class,'attendances']);
-    Route::get('users', [RestController::class, 'users']);
+    Route::get('users', [AttendanceController::class, 'users']);
 });
 
 
@@ -37,7 +37,7 @@ Route::prefix('rest')->group(function () {
     Route::get('end', [RestController::class,'end']);
 });
 
-ute::get('userPage/{id}', [RestController::class, 'userPage']);
+Route::get('user/{id}', [AttendanceController::class, 'userPage']);
 
 //メールの送信テスト mailtrap
 Route::get('/mail',[TestMailController::class,'send']);
