@@ -9,7 +9,7 @@ a {
   color: #000;
 }
 
-
+/* header部分 */
 .header {
   display: flex;
   justify-content: space-between;
@@ -46,11 +46,14 @@ a {
 
 
 /* heightの指定 vh? */
+/* main背景 */
 main {
   width: 100%;
   background-color: #eee;
+  height: 80vh;
 }
 
+/* index.blade.php */
 .wrapper {
   width: 70%;
   margin: 0 auto;
@@ -109,6 +112,91 @@ main {
 }
 
 
+/* attendances.blade.php */
+.wrapper_attendances {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.flex,
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex {
+  padding: 40px 0;
+}
+
+.date_link {
+  border: 1px solid blue;
+  background-color: #fff;
+  color: blue;
+  padding: 0 7px;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0 30px;
+}
+
+.attendance_table {
+  width: 100%;
+}
+
+/* users.blade.php, userPage.blade.php */
+.name,
+.title {
+  text-align: center;
+  padding: 40px 0;
+  font-weight: bold;
+}
+
+.users_table {
+  width: 100%;
+}
+
+
+/* table,pagination部分 */
+tr {
+  border-top: 1px solid black;
+}
+
+th,
+td {
+  text-align: center;
+  width: 20%;
+  padding: 15px 0;
+  font-size: 14px;
+}
+
+.pagination {
+  padding: 50px 0 70px 0;
+}
+
+.page-link {
+  color: rgb(47, 126, 228);
+  background-color: #fff;
+  padding: 10px;
+}
+
+.page-item:not(:last-of-type) {
+  margin-right: 2px;
+}
+
+.page-item:first-of-type .page-link {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.page-item:last-of-type .page-link {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+
+/* footer部分 */
 .footer {
   padding-top: 20px;
   display: flex;
