@@ -40,5 +40,16 @@
   <footer class="footer">
     <small class="footer-logo">Atte,inc.</small>
   </footer>
+
+  <script>
+    //勤務、休憩開始ボタンの多重クリック防止処理
+    const start = document.getElementById('start');
+    
+
+    // クリック時にdisabledにすると勤務開始が出来ない
+    start.addEventListener('click', () => {
+      alert("開始処理中です。お待ちください。");
+    });
+  </script>
 </body>
 </html>

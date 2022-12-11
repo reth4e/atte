@@ -19,6 +19,7 @@ class AttendanceController extends Controller
         $user = Auth::user();
         $dt = new Carbon();
         // dd($dt->addDay(1));
+        // $a = new Carbon(NULL);
         $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //$attendanceの取得に失敗、$dt->formatにし忘れ
         $work_start = FALSE;
         $work_end = FALSE;
@@ -183,6 +184,13 @@ class AttendanceController extends Controller
             //ここで勤務時間を開始時間、終了時間、休憩時間から算出
             $attendance_start = new Carbon($attendance->started_at);
             $attendance_finish = new Carbon($attendance->finished_at);
+            if($attendance_finish === NULL){
+                $finish_datetime = $attendance_start->year.'-'.$attendance_start->month.'-'.$attendance_start->day.' 23:59:59';
+                $attendance_finish = Carbon::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $finish_datetime,
+                );
+            }
             $work_diff = $attendance_start->diffInSeconds($attendance_finish);
             $work_total = $work_diff - $rest_total;
 
