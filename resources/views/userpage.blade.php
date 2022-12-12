@@ -14,7 +14,11 @@
                 <tr>
                     <td>{{$attendance->date}}</td>
                     <td>{{$attendance->started_at}}</td>
+                    @if($attendance->finished_at != NULL)
                     <td>{{$attendance->finished_at}}</td>
+                    @else
+                    <td>23:59:59</td>
+                    @endif
                     @if($attendance->rest_sum != NULL)
                     <td>{{$attendance->rest_sum}}</td>
                     @else

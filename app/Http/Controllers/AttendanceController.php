@@ -45,7 +45,7 @@ class AttendanceController extends Controller
                     $rest_end = FALSE;
                 }
                 
-            }elseif($attendance->finished_at){//勤務時間外
+            }else{//勤務時間外
                 $work_start = TRUE;
                 $rest_start = FALSE;
                 $rest_end = FALSE;
@@ -145,6 +145,26 @@ class AttendanceController extends Controller
         $attendances = Attendance::where('date', $date->format('Y-m-d'))->paginate(5);
         
         foreach($attendances as $attendance){
+            
+            
+            //ここで勤務時間を開始時間、終了時間、休憩時間から算出
+            $attendance_start = new Carbon($attendance->started_at);
+            $attendance_finish = new Carbon($attendance->finished_at);
+            
+            
+            //日跨ぎ処理
+            if($attendance->finished_at === NULL){
+                $finish_datetime = $attendance_start->year.'-'.$attendance_start->month.'-'.$attendance_start->day.' 23:59:59';
+                $attendance_finish = Carbon::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $finish_datetime,
+                );
+
+                
+                
+            }
+            
+            
             $rest_total = 0;
             $rests = Rest::where('attendance_id',$attendance->id)->get();
             foreach($rests as $rest){
@@ -155,7 +175,7 @@ class AttendanceController extends Controller
             }
             //ここでtotalを時間に変換が必要
             $rest_hours = (int)($rest_total / 3600);
-            $rest_minutes = (int)($rest_total / 60);
+            $rest_minutes = (int)($rest_total % 3600 / 60);
             $rest_seconds = (int)($rest_total % 60);
             //ここでstrに変換？
             //時、分、秒のそれぞれを場合分け、2桁ならそのまま変換、１桁なら０を前に着けて変換
@@ -179,24 +199,16 @@ class AttendanceController extends Controller
 
             //strからtimeに
             $attendance->rest_sum = date('H:i:s', strtotime($rest_hours_s.$rest_minutes_s.$rest_seconds_s));
-            //$attendance->rest_sum = $total;
-            
-            //ここで勤務時間を開始時間、終了時間、休憩時間から算出
-            $attendance_start = new Carbon($attendance->started_at);
-            $attendance_finish = new Carbon($attendance->finished_at);
-            if($attendance_finish === NULL){
-                $finish_datetime = $attendance_start->year.'-'.$attendance_start->month.'-'.$attendance_start->day.' 23:59:59';
-                $attendance_finish = Carbon::createFromFormat(
-                    'Y-m-d H:i:s',
-                    $finish_datetime,
-                );
-            }
+
+
             $work_diff = $attendance_start->diffInSeconds($attendance_finish);
             $work_total = $work_diff - $rest_total;
 
-            //work_totalの変換
+            
+
+            //work_totalの変換 要書き換え
             $work_hours = (int)($work_total / 3600);
-            $work_minutes = (int)($work_total / 60);
+            $work_minutes = (int)($work_total % 3600 / 60);
             $work_seconds = (int)($work_total % 60);
 
             if($work_hours < 10) {
@@ -247,6 +259,16 @@ class AttendanceController extends Controller
         $attendances = Attendance::where('user_id', $id)->paginate(5);
 
         foreach($attendances as $attendance){
+            //日跨ぎ処理
+            if($attendance->finished_at === NULL){
+                $finish_datetime = $attendance_start->year.'-'.$attendance_start->month.'-'.$attendance_start->day.' 23:59:59';
+                $attendance_finish = Carbon::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $finish_datetime,
+                );
+
+            }
+
             $rest_total = 0;
             $rests = Rest::where('attendance_id',$attendance->id)->get();
             foreach($rests as $rest){
@@ -257,7 +279,7 @@ class AttendanceController extends Controller
             }
             //ここでtotalを時間に変換が必要
             $rest_hours = (int)($rest_total / 3600);
-            $rest_minutes = (int)($rest_total / 60);
+            $rest_minutes = (int)($rest_total % 3600 / 60);
             $rest_seconds = (int)($rest_total % 60);
             //ここでstrに変換？
             //時、分、秒のそれぞれを場合分け、2桁ならそのまま変換、１桁なら０を前に着けて変換
@@ -291,7 +313,7 @@ class AttendanceController extends Controller
 
             //work_totalの変換
             $work_hours = (int)($work_total / 3600);
-            $work_minutes = (int)($work_total / 60);
+            $work_minutes = (int)($work_total % 3600 / 60);
             $work_seconds = (int)($work_total % 60);
 
             if($work_hours < 10) {
