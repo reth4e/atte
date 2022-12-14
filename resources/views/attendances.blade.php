@@ -24,18 +24,12 @@
           <tr>
             <td>{{$attendance->user->name}}</td>
             <td>{{$attendance->started_at}}</td>
-            @if($attendance->finished_at != NULL)
             <td>{{$attendance->finished_at}}</td>
-            <!-- どうしてもfinished_atに時間を入れられない場合の処置 -->
-            @else
-            <td>23:59:59</td>
-            @endif
-            @if($attendance->rest_sum != NULL)
+            @if($attendance->rest_sum !== NULL)
             <td>{{$attendance->rest_sum}}</td>
             @else
             <td>00:00:00</td>
             @endif
-            <!-- ここにも処置が必要 -->
             <td>{{$attendance->work_sum}}</td>
           </tr>
         @endforeach

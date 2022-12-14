@@ -94,7 +94,6 @@ class AttendanceController extends Controller
             'rest_end' => $rest_end,
         ];
         return view('index',$param);
-        //↑の分岐をもっとシンプルに 10/30
     }
 
     //勤務終了処理
@@ -104,14 +103,24 @@ class AttendanceController extends Controller
         //毎回Auth::user()入れる？
         $date = new Carbon();
         $dt = new Carbon();
-        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //$attendanceが取得できなかった場合の分岐を考えるべき？
+        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); 
         
         $work_start = TRUE;
         $work_end = FALSE;
         $rest_start = FALSE;
         $rest_end = FALSE;
-        //$attendanceない場合の分岐を書く
-        
+        $param = ['user' => $user, 
+            'work_start' => $work_start,
+            'work_end' => $work_end,
+            'rest_start' => $rest_start,
+            'rest_end' => $rest_end,
+        ];
+
+        //$attendanceない場合の分岐を書く(日跨ぎ時の処理)
+
+        if(!$attendance){
+            return view('index',$param);
+        }
         
         // $attendance->finished_at = date_format($date , 'H:i:s');
         // Attendance::where('user_id', $user->id)->latest()->first()->update($attendance);
@@ -120,12 +129,7 @@ class AttendanceController extends Controller
             'finished_at' => date_format($date , 'H:i:s')
         ]);
         //model Attendance.phpのfillableにfinished_atを入れなければならない
-        $param = ['user' => $user, 
-            'work_start' => $work_start,
-            'work_end' => $work_end,
-            'rest_start' => $rest_start,
-            'rest_end' => $rest_end,
-        ];
+        
         return view('index',$param);
     }
 
@@ -136,7 +140,7 @@ class AttendanceController extends Controller
         $dt = new Carbon();
         if ($num > 0){
             $date = $dt->addDays($num);
-        } elseif ($num == 0){
+        } elseif ($num === 0){
             $date = $dt;
         } else {
             $date = $dt->subDays(-$num);
@@ -147,20 +151,21 @@ class AttendanceController extends Controller
         foreach($attendances as $attendance){
             
             
-            //ここで勤務時間を開始時間、終了時間、休憩時間から算出
+            
             $attendance_start = new Carbon($attendance->started_at);
             $attendance_finish = new Carbon($attendance->finished_at);
             
             
-            //日跨ぎ処理
-            if($attendance->finished_at === NULL){
-                $finish_datetime = $attendance_start->year.'-'.$attendance_start->month.'-'.$attendance_start->day.' 23:59:59';
-                $attendance_finish = Carbon::createFromFormat(
-                    'Y-m-d H:i:s',
-                    $finish_datetime,
-                );
-
-                
+            //日跨ぎ処理 numによって分岐
+            if($attendance->finished_at === NULL && $num < 0){
+                    $finish_datetime = $attendance_start->year.'-'.$attendance_start->month.'-'.$attendance_start->day.' 23:59:59';
+                    $attendance_finish = Carbon::createFromFormat(
+                        'Y-m-d H:i:s',
+                        $finish_datetime,
+                    );
+                    $attendance->update([
+                        'finished_at' => date_format($attendance_finish , 'H:i:s')
+                    ]);
                 
             }
             
@@ -170,6 +175,19 @@ class AttendanceController extends Controller
             foreach($rests as $rest){
                 $rest_start = new Carbon($rest->started_at);
                 $rest_finish = new Carbon($rest->finished_at);
+
+                //日跨ぎ時の処理
+                if($rest->finished_at === NULL && $num < 0){
+                    $finish_resttime = $rest_start->year.'-'.$rest_start->month.'-'.$rest_start->day.' 23:59:59';
+                    $rest_finish = Carbon::createFromFormat(
+                        'Y-m-d H:i:s',
+                        $finish_resttime,
+                    );
+                    $rest->update([
+                        'finished_at' => date_format($rest_finish , 'H:i:s')
+                    ]);
+                }
+                
                 $rest_diff = $rest_start->diffInSeconds($rest_finish);
                 $rest_total = $rest_total + $rest_diff; //休憩時間の合計算出(int)
             }
@@ -200,7 +218,7 @@ class AttendanceController extends Controller
             //strからtimeに
             $attendance->rest_sum = date('H:i:s', strtotime($rest_hours_s.$rest_minutes_s.$rest_seconds_s));
 
-
+            //ここで勤務時間を開始時間、終了時間、休憩時間から算出
             $work_diff = $attendance_start->diffInSeconds($attendance_finish);
             $work_total = $work_diff - $rest_total;
 
@@ -257,16 +275,25 @@ class AttendanceController extends Controller
         $id = $request->id;
         $user = User::where('id', $id)->first();
         $attendances = Attendance::where('user_id', $id)->paginate(5);
+        $dt = new Carbon();
 
         foreach($attendances as $attendance){
-            //日跨ぎ処理
-            if($attendance->finished_at === NULL){
+            //日跨ぎ処理 startの日付と今日の日付との比較で分岐
+            $attendance_start = new Carbon($attendance->started_at);
+            $attendance_finish = new Carbon($attendance->finished_at);
+
+            //要検証
+            if($attendance->finished_at === NULL && $attendance->date < date_format($dt , 'Y-m-d')){
                 $finish_datetime = $attendance_start->year.'-'.$attendance_start->month.'-'.$attendance_start->day.' 23:59:59';
                 $attendance_finish = Carbon::createFromFormat(
                     'Y-m-d H:i:s',
                     $finish_datetime,
                 );
-
+                
+                //今日以前のfinished_atがNULLのときupdate
+                $attendance->update([
+                        'finished_at' => date_format($attendance_finish , 'H:i:s')
+                    ]);
             }
 
             $rest_total = 0;
@@ -274,6 +301,20 @@ class AttendanceController extends Controller
             foreach($rests as $rest){
                 $rest_start = new Carbon($rest->started_at);
                 $rest_finish = new Carbon($rest->finished_at);
+
+                if($rest->finished_at === NULL && $attendance->date < date_format($dt , 'Y-m-d')){
+                    $finish_resttime = $rest_start->year.'-'.$rest_start->month.'-'.$rest_start->day.' 23:59:59';
+                    $rest_finish = Carbon::createFromFormat(
+                        'Y-m-d H:i:s',
+                        $finish_resttime,
+                    );
+                    
+                    //今日以前のfinished_atがNULLのときupdate
+                    $rest->update([
+                            'finished_at' => date_format($rest_finish , 'H:i:s')
+                        ]);
+            }
+
                 $rest_diff = $rest_start->diffInSeconds($rest_finish);
                 $rest_total = $rest_total + $rest_diff; //休憩時間の合計算出(int)
             }
@@ -306,8 +347,7 @@ class AttendanceController extends Controller
             //$attendance->rest_sum = $total;
             
             //ここで勤務時間を開始時間、終了時間、休憩時間から算出
-            $attendance_start = new Carbon($attendance->started_at);
-            $attendance_finish = new Carbon($attendance->finished_at);
+            
             $work_diff = $attendance_start->diffInSeconds($attendance_finish);
             $work_total = $work_diff - $rest_total;
 

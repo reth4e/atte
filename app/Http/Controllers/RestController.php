@@ -20,8 +20,23 @@ class RestController extends Controller
         $rest = new Rest();
         $dt = new Carbon();
         $dt->format('Y-m-d');
-        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //分岐？
-        //finished_atの条件をつける
+        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); 
+        
+        //分岐 日跨ぎ時の処理
+        if(!$attendance){
+            $work_start = TRUE;
+            $work_end = FALSE;
+            $rest_start = FALSE;
+            $rest_end = FALSE;
+            $param = ['user' => $user, 
+                'work_start' => $work_start,
+                'work_end' => $work_end,
+                'rest_start' => $rest_start,
+                'rest_end' => $rest_end,
+            ];
+            return view('index',$param);
+        }
+
         $rest->attendance_id = $attendance->id; //error発生  ()のせい？
         //error attendance->id=null
         $rest->started_at = date_format($date , 'H:i:s');
@@ -45,14 +60,30 @@ class RestController extends Controller
         $user = Auth::user();
         $dt = new Carbon();
         $dt->format('Y-m-d');
-        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); //分岐？
-        //finished_atの条件をつける
+        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); 
+        
+        //分岐 日跨ぎ時の処理
+        if(!$attendance){
+            $work_start = TRUE;
+            $work_end = FALSE;
+            $rest_start = FALSE;
+            $rest_end = FALSE;
+            $param = ['user' => $user, 
+                'work_start' => $work_start,
+                'work_end' => $work_end,
+                'rest_start' => $rest_start,
+                'rest_end' => $rest_end,
+            ];
+            return view('index',$param);
+        }
+
         $date = new Carbon();
         $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
         //error undefined variable $attendance
         $rest->update([
             'finished_at' => date_format($date , 'H:i:s')
         ]);
+
         $work_start = FALSE;
         $work_end = TRUE;
         $rest_start = TRUE;
@@ -63,6 +94,7 @@ class RestController extends Controller
             'rest_start' => $rest_start,
             'rest_end' => $rest_end,
         ];
+        
         return view('index',$param);
     }
     //↑2つ今週 10/15
