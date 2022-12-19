@@ -123,3 +123,4 @@ php artisan db:seed
 ## 他に記載することがあれば記述する
 メール認証システムにmailtrapを利用しているのでmailtrapの登録が必要です。
 envファイルは別途お渡しします。
+使用OSはWindows10 64bitです。
