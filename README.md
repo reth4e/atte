@@ -102,5 +102,24 @@ atteは勤怠管理システムです。勤務開始、勤務終了時間及び�
 ![ER](er.drawio.png)
 
 
-#　環境構築
+# 環境構築
+mysql -u root -p
+create database attendancedb;
+composer require "laravel/breeze=1.9.0" --dev
+php artisan breeze:install
+npm install
+npm run dev
+php artisan make:controller AttendanceController
+php artisan make:controller RestController
+php artisan make:controller TestMailController
+php artisan make:mail TestMail
+php artisan make:model Attendance -m
+php artisan make:model Rest -m
+php artisan migrate
+php artisan make:seeder AttendancesTableSeeder
+php artisan make:seeder RestsTableSeeder
+php artisan db:seed
 
+## 他に記載することがあれば記述する
+メール認証システムにmailtrapを利用しているのでmailtrapの登録が必要です。
+envファイルは別途お渡しします。

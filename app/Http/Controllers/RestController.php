@@ -18,11 +18,9 @@ class RestController extends Controller
         $user = Auth::user();
         $date = new Carbon();
         $rest = new Rest();
-        $dt = new Carbon();
-        $dt->format('Y-m-d');
-        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); 
+        $attendance = Attendance::where('user_id', $user->id)->where('date', $date->format('Y-m-d'))->latest()->first(); 
         
-        //分岐 日跨ぎ時の処理
+        //分岐 日跨ぎ時の処理 $restを作らずにそのままホーム画面に移る
         if(!$attendance){
             $work_start = TRUE;
             $work_end = FALSE;
@@ -58,11 +56,10 @@ class RestController extends Controller
     public function end()
     {
         $user = Auth::user();
-        $dt = new Carbon();
-        $dt->format('Y-m-d');
-        $attendance = Attendance::where('user_id', $user->id)->where('date', $dt->format('Y-m-d'))->latest()->first(); 
+        $date = new Carbon();
+        $attendance = Attendance::where('user_id', $user->id)->where('date', $date->format('Y-m-d'))->latest()->first(); 
         
-        //分岐 日跨ぎ時の処理
+        //分岐 日跨ぎ時の処理　updateせずにそのままホーム画面に移る
         if(!$attendance){
             $work_start = TRUE;
             $work_end = FALSE;
@@ -77,7 +74,6 @@ class RestController extends Controller
             return view('index',$param);
         }
 
-        $date = new Carbon();
         $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
         //error undefined variable $attendance
         $rest->update([

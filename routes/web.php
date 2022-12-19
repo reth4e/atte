@@ -24,7 +24,7 @@ Route::prefix('attendance')->group(function () {
     Route::get('end', [AttendanceController::class,'end']);
 });
 
-//下のミドルウェアauthをverifiedにすると認証画面　エラー　Connection could not be established with host mailhog →mailtrapに変更
+// 要メール認証
 Route::group(['middleware' => 'verified' ],function() {
     Route::get('/', [AttendanceController::class, 'index']);
     Route::get('attendance/{num}', [AttendanceController::class,'attendances']);

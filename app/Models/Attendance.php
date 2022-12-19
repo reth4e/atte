@@ -13,7 +13,6 @@ class Attendance extends Model
 
     protected $fillable = ['user_id','date', 'started_at', 'finished_at'];
 
-
     public function user(){
 		return $this->belongsTo('App\Models\User');
     }
